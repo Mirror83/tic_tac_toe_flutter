@@ -46,7 +46,7 @@ class TicTacToeBoard {
     }
   }
 
-  bool checkForHorizontalWin() {
+  bool _checkForHorizontalWin() {
     for (final row in board) {
       if (row[0] == row[1] && row[1] == row[2] && row[0] != BoardToken.empty) {
         return true;
@@ -56,7 +56,7 @@ class TicTacToeBoard {
     return false;
   }
 
-  bool checkForVerticalWin() {
+  bool _checkForVerticalWin() {
     for (int col = 0; col < cols; col++) {
       if (board[0][col] == board[1][col] &&
           board[1][col] == board[2][col] &&
@@ -68,7 +68,7 @@ class TicTacToeBoard {
     return false;
   }
 
-  bool checkForDiagonalWin() {
+  bool _checkForDiagonalWin() {
     if (board[0][0] == board[1][1] &&
         board[1][1] == board[2][2] &&
         board[0][0] != BoardToken.empty) {
@@ -85,9 +85,9 @@ class TicTacToeBoard {
   }
 
   bool checkForWin() {
-    if (checkForHorizontalWin() ||
-        checkForVerticalWin() ||
-        checkForDiagonalWin()) {
+    if (_checkForHorizontalWin() ||
+        _checkForVerticalWin() ||
+        _checkForDiagonalWin()) {
       return true;
     }
     return false;
