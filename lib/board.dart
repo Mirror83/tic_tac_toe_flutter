@@ -47,6 +47,14 @@ class TicTacToeBoard {
     }
   }
 
+  void clearBoard() {
+    for (int row = 0; row < rows; row++) {
+      for (int col = 0; col < cols; col++) {
+        board[row][col] = BoardToken.empty;
+      }
+    }
+  }
+
   void forEach(void Function(List<BoardToken>) action) {
     board.forEach(action);
   }
