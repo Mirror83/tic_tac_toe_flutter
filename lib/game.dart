@@ -53,7 +53,15 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
           children: <Widget>[
             pseudoLogo,
             Text(determineHeaderText()),
-            const Text("Refresh")
+            TextButton(
+              onPressed: () {
+                board.clearBoard();
+                setState(() {
+                  gameState = GameState.playerOneTurn;
+                });
+              },
+              child: const Text("Refresh"),
+            ),
           ],
         ),
       ),
@@ -193,7 +201,7 @@ class _BoardTileState extends State<BoardTile> {
           child: Center(
             child: Text(
               tokenToString(),
-              style: theme.textTheme.bodyLarge,
+              style: theme.textTheme.headlineLarge,
             ),
           ),
         ));
