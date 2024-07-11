@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import "dart:developer" as dev;
-
-const board = ["", "", "", "", "", "", "", "", ""];
+import 'package:tic_tac_toe/game.dart';
 
 void main() {
   runApp(const MainApp());
@@ -25,8 +23,7 @@ class MainApp extends StatelessWidget {
           body: Column(
         children: [
           buildHeader(context),
-          buildBoard(context),
-          const Row(),
+          const TicTacToeGame(),
         ],
       )),
     );
@@ -58,71 +55,6 @@ class MainApp extends StatelessWidget {
             const Text("X's turn"),
             const Text("Refresh")
           ],
-        ),
-      ),
-    );
-  }
-
-  Widget buildBoard(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: Center(
-            child: SizedBox(
-              width: 320,
-              height: 400,
-              child: GridView.count(
-                crossAxisCount: 3,
-                mainAxisSpacing: 4,
-                crossAxisSpacing: 4,
-                children: [
-                  ...board.map((token) => GridTile(token: token.toString()))
-                ],
-              ),
-            ),
-          ),
-        )
-      ],
-    );
-  }
-}
-
-class GridTile extends StatefulWidget {
-  const GridTile({super.key, required this.token});
-
-  final String token;
-
-  @override
-  State<GridTile> createState() => _GridTileState();
-}
-
-class _GridTileState extends State<GridTile> {
-  bool isActive = false;
-
-  void toggleIsActive() {
-    setState(() {
-      dev.log("Changed isActive from: $isActive");
-      isActive = !isActive;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return GestureDetector(
-      onTap: toggleIsActive,
-      child: Container(
-        decoration: BoxDecoration(
-          color: isActive ? theme.colorScheme.primary : null,
-          border: Border.all(),
-          borderRadius: BorderRadius.circular(4),
-        ),
-        child: Center(
-          child: Text(widget.token,
-              style: theme.textTheme.bodyLarge!.copyWith(
-                  color: isActive
-                      ? theme.colorScheme.onPrimary
-                      : theme.colorScheme.onSurface)),
         ),
       ),
     );
