@@ -27,14 +27,28 @@ class BoardPosition {
 }
 
 class TicTacToeBoard {
-  List<List<BoardToken>> board =
-      List.filled(rows, List.filled(cols, BoardToken.empty));
+  List<List<BoardToken>> board = [];
 
-  // This custom constructor is for testing purposes only.
+  // Thie startBoard parameter is for testing purposes only.
   TicTacToeBoard({List<List<BoardToken>>? startBoard}) {
     if (startBoard != null) {
       board = startBoard;
+    } else {
+      _initializeBoard();
     }
+  }
+
+  void _initializeBoard() {
+    for (int row = 0; row < rows; row++) {
+      board.add([]);
+      for (int col = 0; col < cols; col++) {
+        board[row].add(BoardToken.empty);
+      }
+    }
+  }
+
+  void forEach(void Function(List<BoardToken>) action) {
+    board.forEach(action);
   }
 
   void placeToken(BoardPosition position, BoardToken token) {
