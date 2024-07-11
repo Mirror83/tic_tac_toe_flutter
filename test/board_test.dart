@@ -2,6 +2,37 @@ import "package:flutter_test/flutter_test.dart";
 import "package:tic_tac_toe/board.dart";
 
 void main() {
+  test("check empty board for win", () {
+    final board = TicTacToeBoard();
+
+    expect(board.checkForWin(), isFalse);
+  });
+
+  test("check empty board for draw", () {
+    final board = TicTacToeBoard();
+
+    expect(board.checkForDraw(), isFalse);
+  });
+
+  test("place token", () {
+    final board = TicTacToeBoard();
+
+    expect(
+        board.board
+            .every((row) => row.every((token) => token == BoardToken.empty)),
+        isTrue);
+
+    board.placeToken(BoardPosition(row: 0, col: 0), BoardToken.x);
+
+    final List<BoardToken> xTokens = [];
+    for (var row in board.board) {
+      for (var token in row) {
+        if (token == BoardToken.x) xTokens.add(token);
+      }
+    }
+    expect(xTokens.length, 1);
+  });
+
   test("check for diagonal win", () {
     final board = TicTacToeBoard(startBoard: [
       [BoardToken.x, BoardToken.empty, BoardToken.empty],
