@@ -15,8 +15,8 @@ void main() {
       [BoardToken.o, BoardToken.empty, BoardToken.x],
     ]);
 
-    expect(board.checkForDiagonalWin(), isTrue);
-    expect(board2.checkForDiagonalWin(), isTrue);
+    expect(board.checkForWin(), isTrue);
+    expect(board2.checkForWin(), isTrue);
   });
 
   test("check for vertical win", () {
@@ -38,9 +38,9 @@ void main() {
       [BoardToken.empty, BoardToken.x, BoardToken.x],
     ]);
 
-    expect(board.checkForVerticalWin(), isTrue);
-    expect(board2.checkForVerticalWin(), isTrue);
-    expect(board3.checkForVerticalWin(), isTrue);
+    expect(board.checkForWin(), isTrue);
+    expect(board2.checkForWin(), isTrue);
+    expect(board3.checkForWin(), isTrue);
   });
 
   test("check for horizontal win", () {
@@ -62,8 +62,8 @@ void main() {
       [BoardToken.o, BoardToken.o, BoardToken.o],
     ]);
 
-    expect(board.checkForHorizontalWin(), isTrue);
-    expect(board2.checkForHorizontalWin(), isTrue);
-    expect(board3.checkForHorizontalWin(), isTrue);
+    expect(board.checkForWin(), isTrue);
+    expect(board2.checkForWin(), isTrue);
+    expect(board3.checkForWin(), isTrue);
   });
 }
