@@ -19,43 +19,8 @@ class MainApp extends StatelessWidget {
           secondary: const Color(0xFFF2B237),
         ),
       ),
-      home: Scaffold(
-          body: Column(
-        children: [
-          buildHeader(context),
-          const TicTacToeGame(),
-        ],
-      )),
-    );
-  }
-
-  Widget buildHeader(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    final pseudoLogo = RichText(
-        text: TextSpan(
-            text: "X",
-            style: TextStyle(
-                color: theme.colorScheme.primary,
-                fontSize: theme.textTheme.displayMedium!.fontSize),
-            children: [
-          TextSpan(
-              text: "O",
-              style: TextStyle(
-                color: theme.colorScheme.secondary,
-              ))
-        ]));
-
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            pseudoLogo,
-            const Text("X's turn"),
-            const Text("Refresh")
-          ],
-        ),
+      home: const Scaffold(
+        body: TicTacToeGame(),
       ),
     );
   }

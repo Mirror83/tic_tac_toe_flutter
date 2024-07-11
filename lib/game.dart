@@ -14,6 +14,52 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
   var gameState = GameState.playerOneTurn;
   final _tag = "TicTacToeGame";
 
+  String determineHeaderText() {
+    switch (gameState) {
+      case GameState.playerOneTurn:
+        return "X's turn.";
+      case GameState.playerTwoTurn:
+        return "O's turn.";
+      case GameState.playerOneVictory:
+        return "X wins!";
+      case GameState.playerTwoVictory:
+        return "O wins!";
+      case GameState.draw:
+        return "It's a draw";
+    }
+  }
+
+  Widget buildHeader(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+    final pseudoLogo = RichText(
+        text: TextSpan(
+            text: "X",
+            style: TextStyle(
+                color: theme.colorScheme.primary,
+                fontSize: theme.textTheme.displayMedium!.fontSize),
+            children: [
+          TextSpan(
+              text: "O",
+              style: TextStyle(
+                color: theme.colorScheme.secondary,
+              ))
+        ]));
+
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            pseudoLogo,
+            Text(determineHeaderText()),
+            const Text("Refresh")
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget buildBoard(BuildContext context) {
     final List<BoardTile> boardTiles = [];
 
@@ -53,8 +99,6 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
   }
 
   void makeMove(BoardPosition position) {
-    log("Position: ${(position.row, position.col)}", name: "makeMove");
-
     switch (gameState) {
       case GameState.playerOneTurn:
         board.placeToken(position, BoardToken.x);
@@ -98,7 +142,12 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
 
   @override
   Widget build(BuildContext context) {
-    return buildBoard(context);
+    return Column(
+      children: [
+        buildHeader(context),
+        buildBoard(context),
+      ],
+    );
   }
 }
 
