@@ -29,6 +29,48 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
     }
   }
 
+  void makeMove(BoardPosition position) {
+    switch (gameState) {
+      case GameState.playerOneTurn:
+        board.placeToken(position, BoardToken.x);
+        // Check board for new game state
+        setState(() {
+          if (board.checkForWin() == true) {
+            gameState = GameState.playerOneVictory;
+          } else if (board.checkForDraw() == true) {
+            gameState = GameState.draw;
+          } else {
+            gameState = GameState.playerTwoTurn;
+          }
+        });
+
+        break;
+      case GameState.playerTwoTurn:
+        board.placeToken(position, BoardToken.o);
+        // Check board for new game state
+        setState(() {
+          if (board.checkForWin() == true) {
+            gameState = GameState.playerTwoVictory;
+          } else if (board.checkForDraw() == true) {
+            gameState = GameState.draw;
+          } else {
+            gameState = GameState.playerOneTurn;
+          }
+        });
+
+        break;
+      case GameState.playerOneVictory:
+        log("Player one wins!", name: _tag);
+        break;
+      case GameState.playerTwoVictory:
+        log("Player two wins!", name: _tag);
+        break;
+      case GameState.draw:
+        log("Game is a draw", name: _tag);
+        break;
+    }
+  }
+
   Widget buildHeader(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final pseudoLogo = RichText(
@@ -104,48 +146,6 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
         )
       ],
     );
-  }
-
-  void makeMove(BoardPosition position) {
-    switch (gameState) {
-      case GameState.playerOneTurn:
-        board.placeToken(position, BoardToken.x);
-        // Check board for new game state
-        setState(() {
-          if (board.checkForWin() == true) {
-            gameState = GameState.playerOneVictory;
-          } else if (board.checkForDraw() == true) {
-            gameState = GameState.draw;
-          } else {
-            gameState = GameState.playerTwoTurn;
-          }
-        });
-
-        break;
-      case GameState.playerTwoTurn:
-        board.placeToken(position, BoardToken.o);
-        // Check board for new game state
-        setState(() {
-          if (board.checkForWin() == true) {
-            gameState = GameState.playerTwoVictory;
-          } else if (board.checkForDraw() == true) {
-            gameState = GameState.draw;
-          } else {
-            gameState = GameState.playerOneTurn;
-          }
-        });
-
-        break;
-      case GameState.playerOneVictory:
-        log("Player one wins!", name: _tag);
-        break;
-      case GameState.playerTwoVictory:
-        log("Player two wins!", name: _tag);
-        break;
-      case GameState.draw:
-        log("Game is a draw", name: _tag);
-        break;
-    }
   }
 
   @override
