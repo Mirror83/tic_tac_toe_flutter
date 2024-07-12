@@ -1,9 +1,18 @@
+import 'dart:async';
+import 'dart:math' show Random;
+
 import 'package:flutter/material.dart';
 import 'package:tic_tac_toe/board.dart';
 import 'dart:developer' show log;
 
+enum GameMode {
+  playerVsPlayer,
+  playerVsComputer,
+}
+
 class TicTacToeGame extends StatefulWidget {
-  const TicTacToeGame({super.key});
+  final GameMode gameMode;
+  const TicTacToeGame({super.key, this.gameMode = GameMode.playerVsComputer});
 
   @override
   State<TicTacToeGame> createState() => _TicTacToeGameState();
@@ -11,6 +20,9 @@ class TicTacToeGame extends StatefulWidget {
 
 class _TicTacToeGameState extends State<TicTacToeGame> {
   final TicTacToeBoard board = TicTacToeBoard();
+
+  var computerIsMoving = false;
+
   var gameState = GameState.playerOneTurn;
   final _tag = "TicTacToeGame";
 
@@ -29,35 +41,60 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
     }
   }
 
+  void evaluateBoard() {
+    setState(() {
+      if (board.checkForWin() == true) {
+        if (gameState == GameState.playerOneTurn) {
+          gameState = GameState.playerOneVictory;
+        } else {
+          gameState = GameState.playerTwoVictory;
+        }
+      } else if (board.checkForDraw() == true) {
+        gameState = GameState.draw;
+      } else if (gameState == GameState.playerOneTurn) {
+        gameState = GameState.playerTwoTurn;
+      } else if (gameState == GameState.playerTwoTurn) {
+        gameState = GameState.playerOneTurn;
+      }
+    });
+  }
+
+  void makeComputerMove() {
+    setState(() {
+      computerIsMoving = true;
+    });
+    Timer(Duration(seconds: Random().nextInt(1) + 6), () {
+      final computerPosition = board.minimaxSearch();
+
+      if (computerPosition != null) {
+        board.placeToken(computerPosition, BoardToken.o);
+      }
+      evaluateBoard();
+
+      setState(() {
+        computerIsMoving = false;
+      });
+    });
+  }
+
   void makeMove(BoardPosition position) {
     switch (gameState) {
       case GameState.playerOneTurn:
         board.placeToken(position, BoardToken.x);
         // Check board for new game state
-        setState(() {
-          if (board.checkForWin() == true) {
-            gameState = GameState.playerOneVictory;
-          } else if (board.checkForDraw() == true) {
-            gameState = GameState.draw;
-          } else {
-            gameState = GameState.playerTwoTurn;
-          }
-        });
+        evaluateBoard();
+
+        if (widget.gameMode == GameMode.playerVsComputer) {
+          makeComputerMove();
+        }
 
         break;
       case GameState.playerTwoTurn:
-        board.placeToken(position, BoardToken.o);
-        // Check board for new game state
-        setState(() {
-          if (board.checkForWin() == true) {
-            gameState = GameState.playerTwoVictory;
-          } else if (board.checkForDraw() == true) {
-            gameState = GameState.draw;
-          } else {
-            gameState = GameState.playerOneTurn;
-          }
-        });
-
+        if (widget.gameMode == GameMode.playerVsPlayer) {
+          board.placeToken(position, BoardToken.o);
+          // Check board for new game state
+          evaluateBoard();
+        }
         break;
       case GameState.playerOneVictory:
         log("Player one wins!", name: _tag);
@@ -119,6 +156,7 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
           BoardTile(
             token: token,
             placeToken: makeMove,
+            canPlaceToken: !computerIsMoving,
             position: BoardPosition(
               row: i,
               col: j,
@@ -162,13 +200,15 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
 class BoardTile extends StatefulWidget {
   final BoardPosition position;
   final void Function(BoardPosition) placeToken;
+  final bool canPlaceToken;
   final BoardToken token;
 
   const BoardTile(
       {super.key,
       required this.token,
       required this.placeToken,
-      required this.position});
+      required this.position,
+      required this.canPlaceToken});
 
   @override
   State<BoardTile> createState() => _BoardTileState();
@@ -191,7 +231,11 @@ class _BoardTileState extends State<BoardTile> {
     final theme = Theme.of(context);
     return GestureDetector(
         onTap: () {
-          widget.placeToken(widget.position);
+          if (widget.canPlaceToken) {
+            widget.placeToken(widget.position);
+          } else {
+            log("Cannot place token yet.", name: "placeTokenBoardTile");
+          }
         },
         child: Container(
           decoration: BoxDecoration(
