@@ -2,6 +2,23 @@ import "package:flutter_test/flutter_test.dart";
 import "package:tic_tac_toe/board.dart";
 
 void main() {
+  test("minimax search", () {
+    final board = TicTacToeBoard(startBoard: [
+      [BoardToken.x, BoardToken.x, BoardToken.o],
+      [BoardToken.o, BoardToken.o, BoardToken.empty],
+      [BoardToken.x, BoardToken.x, BoardToken.empty],
+    ]);
+
+    final board2 = TicTacToeBoard(startBoard: [
+      [BoardToken.x, BoardToken.x, BoardToken.o],
+      [BoardToken.o, BoardToken.o, BoardToken.x],
+      [BoardToken.x, BoardToken.x, BoardToken.o],
+    ]);
+
+    expect(board.minimaxSearch(), BoardPosition(row: 1, col: 2));
+
+    expect(board2.minimaxSearch(), null);
+  });
   test("check empty board for win", () {
     final board = TicTacToeBoard();
 
