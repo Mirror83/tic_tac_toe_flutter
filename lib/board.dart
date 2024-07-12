@@ -24,6 +24,23 @@ class BoardPosition {
   bool isValid() {
     return row >= 0 && row < rows && col >= 0 && col < cols;
   }
+
+  @override
+  bool operator ==(Object other) {
+    if (other is BoardPosition) {
+      return row == other.row && col == other.col;
+    }
+
+    return false;
+  }
+
+  @override
+  String toString() {
+    return "BoardPosition(row: $row, col: $col)";
+  }
+
+  @override
+  int get hashCode => (row, col).hashCode;
 }
 
 class TicTacToeBoard {
@@ -118,5 +135,91 @@ class TicTacToeBoard {
   bool checkForDraw() {
     return !checkForWin() &&
         board.every((row) => row.every((token) => token != BoardToken.empty));
+  }
+
+  bool _isTerminalState() {
+    return checkForWin() || checkForDraw();
+  }
+
+  int _utility(BoardToken currentPlayer) {
+    if (checkForDraw()) {
+      return 0;
+    }
+
+    if (currentPlayer == BoardToken.x) {
+      return 1;
+    } else {
+      return -1;
+    }
+  }
+
+  BoardPosition? minimaxSearch() {
+    // We are calling minValue since the computer-controlled player will
+    // always be player 2.
+    final (_, move) = _minValue(currentPlayer: BoardToken.o);
+    return move;
+  }
+
+  (int, BoardPosition?) _maxValue({BoardToken currentPlayer = BoardToken.x}) {
+    // Check for terminal states and determine utility
+    if (_isTerminalState()) {
+      return (_utility(BoardToken.o), null);
+    }
+
+    // If not in terminal state, carry out max part of minimax algorithm
+    int bestScore = -1000;
+    BoardPosition? bestMove;
+
+    // For each action in the set of possible actions from the current position
+    for (int row = 0; row < rows; row++) {
+      for (int col = 0; col < cols; col++) {
+        if (board[row][col] == BoardToken.empty) {
+          board[row][col] = currentPlayer;
+
+          final (newValue, _) = _minValue(currentPlayer: BoardToken.o);
+
+          if (newValue > bestScore) {
+            bestScore = newValue;
+            bestMove = BoardPosition(row: row, col: col);
+          }
+
+          // Undo move, since we are modifying the board in-place
+          board[row][col] = BoardToken.empty;
+        }
+      }
+    }
+
+    return (bestScore, bestMove);
+  }
+
+  (int, BoardPosition?) _minValue({BoardToken currentPlayer = BoardToken.o}) {
+    // Check for terminal states and determine utility
+    if (_isTerminalState()) {
+      return (_utility(BoardToken.x), null);
+    }
+    // If not in terminal state, carry out max part of minimax algorithm
+    int bestScore = 1000;
+    BoardPosition? move;
+
+    // For each action in the set of possible actions from the current position
+    for (int row = 0; row < rows; row++) {
+      for (int col = 0; col < cols; col++) {
+        if (board[row][col] == BoardToken.empty) {
+          board[row][col] = currentPlayer;
+
+          final (newValue, _) = _maxValue(currentPlayer: BoardToken.x);
+
+          if (newValue < bestScore) {
+            bestScore = newValue;
+            move = BoardPosition(row: row, col: col);
+          }
+
+          // Undo move, since we are modifying the board in-place
+          board[row][col] = BoardToken.empty;
+        }
+      }
+    }
+
+    return (bestScore, move);
   }
 }
