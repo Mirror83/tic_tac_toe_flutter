@@ -109,28 +109,13 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
   }
 
   Widget buildHeader(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    final pseudoLogo = RichText(
-        text: TextSpan(
-            text: "X",
-            style: TextStyle(
-                color: theme.colorScheme.primary,
-                fontSize: theme.textTheme.displayMedium!.fontSize),
-            children: [
-          TextSpan(
-              text: "O",
-              style: TextStyle(
-                color: theme.colorScheme.secondary,
-              ))
-        ]));
-
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            pseudoLogo,
+            const PseudoLogo(),
             Text(determineHeaderText()),
             TextButton(
               onPressed: () {
@@ -194,6 +179,30 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
         buildBoard(context),
       ],
     );
+  }
+}
+
+class PseudoLogo extends StatelessWidget {
+  const PseudoLogo({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return RichText(
+        text: TextSpan(
+            text: "X",
+            style: TextStyle(
+                color: theme.colorScheme.primary,
+                fontSize: theme.textTheme.displayMedium!.fontSize),
+            children: [
+          TextSpan(
+              text: "O",
+              style: TextStyle(
+                color: theme.colorScheme.secondary,
+              ))
+        ]));
   }
 }
 
