@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tic_tac_toe/game.dart';
+import 'package:tic_tac_toe/mode_selection.dart';
 
 void main() {
   runApp(const MainApp());
@@ -19,9 +19,7 @@ class MainApp extends StatelessWidget {
           secondary: const Color(0xFFF2B237),
         ),
       ),
-      home: const Scaffold(
-        body: TicTacToeGame(),
-      ),
+      home: const ModeSelection(),
     );
   }
 }
