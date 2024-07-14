@@ -111,23 +111,27 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Header(
-          gameInfo: determineHeaderText(),
-          refreshBoardCallBack: () {
-            board.clearBoard();
-            setState(() {
-              gameState = GameState.playerOneTurn;
-            });
-          },
+    return SafeArea(
+      child: Scaffold(
+        body: Column(
+          children: [
+            Header(
+              gameInfo: determineHeaderText(),
+              refreshBoardCallBack: () {
+                board.clearBoard();
+                setState(() {
+                  gameState = GameState.playerOneTurn;
+                });
+              },
+            ),
+            Board(
+              board: board,
+              makeMove: makeMove,
+              computerIsMoving: computerIsMoving,
+            ),
+          ],
         ),
-        Board(
-          board: board,
-          makeMove: makeMove,
-          computerIsMoving: computerIsMoving,
-        ),
-      ],
+      ),
     );
   }
 }
@@ -140,20 +144,18 @@ class Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            const PseudoLogo(),
-            Text(gameInfo),
-            TextButton(
-              onPressed: refreshBoardCallBack,
-              child: const Text("Refresh"),
-            ),
-          ],
-        ),
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          const PseudoLogo(),
+          Text(gameInfo),
+          TextButton(
+            onPressed: refreshBoardCallBack,
+            child: const Text("Refresh"),
+          ),
+        ],
       ),
     );
   }
