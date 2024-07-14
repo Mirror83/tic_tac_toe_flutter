@@ -108,58 +108,24 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
     }
   }
 
-  Widget buildBoard(BuildContext context) {
-    final List<BoardTile> boardTiles = [];
-
-    for (var (i, row) in board.board.indexed) {
-      for (var (j, token) in row.indexed) {
-        boardTiles.add(
-          BoardTile(
-            token: token,
-            placeToken: makeMove,
-            canPlaceToken: !computerIsMoving,
-            position: BoardPosition(
-              row: i,
-              col: j,
-            ),
-          ),
-        );
-      }
-    }
-
-    return Row(
-      children: [
-        Expanded(
-          child: Center(
-            child: SizedBox(
-              width: 320,
-              height: 400,
-              child: GridView.count(
-                crossAxisCount: 3,
-                mainAxisSpacing: 4,
-                crossAxisSpacing: 4,
-                children: [...boardTiles],
-              ),
-            ),
-          ),
-        )
-      ],
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         Header(
-            gameInfo: determineHeaderText(),
-            refreshBoardCallBack: () {
-              board.clearBoard();
-              setState(() {
-                gameState = GameState.playerOneTurn;
-              });
-            }),
-        buildBoard(context),
+          gameInfo: determineHeaderText(),
+          refreshBoardCallBack: () {
+            board.clearBoard();
+            setState(() {
+              gameState = GameState.playerOneTurn;
+            });
+          },
+        ),
+        Board(
+          board: board,
+          makeMove: makeMove,
+          computerIsMoving: computerIsMoving,
+        ),
       ],
     );
   }
@@ -213,6 +179,58 @@ class PseudoLogo extends StatelessWidget {
                 color: theme.colorScheme.secondary,
               ))
         ]));
+  }
+}
+
+class Board extends StatelessWidget {
+  final TicTacToeBoard board;
+  final void Function(BoardPosition) makeMove;
+  final bool computerIsMoving;
+
+  const Board(
+      {super.key,
+      required this.board,
+      required this.makeMove,
+      required this.computerIsMoving});
+
+  @override
+  Widget build(BuildContext context) {
+    final List<BoardTile> boardTiles = [];
+
+    for (var (i, row) in board.board.indexed) {
+      for (var (j, token) in row.indexed) {
+        boardTiles.add(
+          BoardTile(
+            token: token,
+            placeToken: makeMove,
+            canPlaceToken: !computerIsMoving,
+            position: BoardPosition(
+              row: i,
+              col: j,
+            ),
+          ),
+        );
+      }
+    }
+
+    return Row(
+      children: [
+        Expanded(
+          child: Center(
+            child: SizedBox(
+              width: 320,
+              height: 400,
+              child: GridView.count(
+                crossAxisCount: 3,
+                mainAxisSpacing: 4,
+                crossAxisSpacing: 4,
+                children: [...boardTiles],
+              ),
+            ),
+          ),
+        )
+      ],
+    );
   }
 }
 
