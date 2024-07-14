@@ -6,26 +6,28 @@ class ModeSelection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        children: [
-          TextButton(
-              onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => const TicTacToeGame(
-                          gameMode: GameMode.playerVsComputer,
-                        )));
-              },
-              child: const Text("You vs Computer")),
-          TextButton(
-              onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => const TicTacToeGame(
-                          gameMode: GameMode.playerVsPlayer,
-                        )));
-              },
-              child: const Text("You vs Human")),
-        ],
+    return SafeArea(
+      child: Center(
+        child: Column(
+          children: [
+            TextButton(
+                onPressed: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const TicTacToeGame(
+                            gameMode: GameMode.playerVsComputer,
+                          )));
+                },
+                child: const Text("You vs Computer")),
+            TextButton(
+                onPressed: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const TicTacToeGame(
+                            gameMode: GameMode.playerVsPlayer,
+                          )));
+                },
+                child: const Text("You vs Human")),
+          ],
+        ),
       ),
     );
   }
