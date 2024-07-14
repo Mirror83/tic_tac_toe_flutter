@@ -84,7 +84,8 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
         // Check board for new game state
         evaluateBoard();
 
-        if (widget.gameMode == GameMode.playerVsComputer) {
+        if (widget.gameMode == GameMode.playerVsComputer &&
+            gameState == GameState.playerTwoTurn) {
           makeComputerMove();
         }
 
