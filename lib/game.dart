@@ -108,30 +108,6 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
     }
   }
 
-  Widget buildHeader(BuildContext context) {
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            const PseudoLogo(),
-            Text(determineHeaderText()),
-            TextButton(
-              onPressed: () {
-                board.clearBoard();
-                setState(() {
-                  gameState = GameState.playerOneTurn;
-                });
-              },
-              child: const Text("Refresh"),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   Widget buildBoard(BuildContext context) {
     final List<BoardTile> boardTiles = [];
 
@@ -175,9 +151,43 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        buildHeader(context),
+        Header(
+            gameInfo: determineHeaderText(),
+            refreshBoardCallBack: () {
+              board.clearBoard();
+              setState(() {
+                gameState = GameState.playerOneTurn;
+              });
+            }),
         buildBoard(context),
       ],
+    );
+  }
+}
+
+class Header extends StatelessWidget {
+  final String gameInfo;
+  final void Function() refreshBoardCallBack;
+  const Header(
+      {super.key, required this.gameInfo, required this.refreshBoardCallBack});
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            const PseudoLogo(),
+            Text(gameInfo),
+            TextButton(
+              onPressed: refreshBoardCallBack,
+              child: const Text("Refresh"),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
