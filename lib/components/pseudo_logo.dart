@@ -13,7 +13,8 @@ class PseudoLogo extends StatelessWidget {
             text: "X",
             style: TextStyle(
                 color: theme.colorScheme.primary,
-                fontSize: theme.textTheme.displayMedium!.fontSize),
+                fontSize: theme.textTheme.displayMedium!.fontSize,
+                fontWeight: FontWeight.w600),
             children: [
           TextSpan(
               text: "O",
