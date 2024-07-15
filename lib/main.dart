@@ -17,6 +17,7 @@ class MainApp extends StatelessWidget {
           secondary: Color(0xFFF2B237),
           tertiary: Color(0xFFA9BEC9),
           error: Colors.red,
+          shadow: Color(0xFF102028),
           surface: Color(0xFF192A32),
           surfaceContainer: Color(0xFF1E3640),
           onPrimary: Color(0xFF0D4E50),
