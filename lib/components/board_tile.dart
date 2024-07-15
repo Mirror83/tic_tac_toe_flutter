@@ -1,0 +1,59 @@
+import 'dart:developer' show log;
+
+import 'package:flutter/material.dart';
+import 'package:tic_tac_toe/board.dart';
+
+class BoardTile extends StatefulWidget {
+  final BoardPosition position;
+  final void Function(BoardPosition) placeToken;
+  final bool canPlaceToken;
+  final BoardToken token;
+
+  const BoardTile(
+      {super.key,
+      required this.token,
+      required this.placeToken,
+      required this.position,
+      required this.canPlaceToken});
+
+  @override
+  State<BoardTile> createState() => _BoardTileState();
+}
+
+class _BoardTileState extends State<BoardTile> {
+  String tokenToString() {
+    switch (widget.token) {
+      case BoardToken.x:
+        return "X";
+      case BoardToken.o:
+        return "O";
+      default:
+        return "";
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return GestureDetector(
+        onTap: () {
+          if (widget.canPlaceToken) {
+            widget.placeToken(widget.position);
+          } else {
+            log("Cannot place token yet.", name: "placeTokenBoardTile");
+          }
+        },
+        child: Container(
+          decoration: BoxDecoration(
+            border: Border.all(),
+            borderRadius: BorderRadius.circular(4),
+          ),
+          child: Center(
+            child: Text(
+              tokenToString(),
+              style: theme.textTheme.headlineLarge,
+            ),
+          ),
+        ));
+  }
+}
