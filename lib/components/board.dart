@@ -42,8 +42,8 @@ class Board extends StatelessWidget {
               height: 400,
               child: GridView.count(
                 crossAxisCount: 3,
-                mainAxisSpacing: 4,
-                crossAxisSpacing: 4,
+                mainAxisSpacing: 8,
+                crossAxisSpacing: 8,
                 children: [...boardTiles],
               ),
             ),
