@@ -96,13 +96,15 @@ class MarkPicker extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
       decoration: BoxDecoration(
         color: theme.colorScheme.surfaceContainer,
-        borderRadius: const BorderRadius.all(Radius.circular(16)),
+        borderRadius: const BorderRadius.all(Radius.circular(20)),
+        border: BorderDirectional(
+            bottom: BorderSide(width: 10, color: theme.colorScheme.shadow)),
       ),
       child: Column(
         children: [
           const Padding(
             padding: EdgeInsets.symmetric(vertical: 16.0),
-            child: Text("PICK PLAYER 1's MARK"),
+            child: Text("PICK PLAYER 1'S MARK"),
           ),
           Container(
             padding: const EdgeInsets.all(8),
