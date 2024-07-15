@@ -91,10 +91,11 @@ class MarkPicker extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
       decoration: BoxDecoration(
-        color: theme.colorScheme.tertiaryFixedDim,
+        color: theme.colorScheme.surfaceContainer,
         borderRadius: const BorderRadius.all(Radius.circular(16)),
       ),
       child: Column(
@@ -107,7 +108,7 @@ class MarkPicker extends StatelessWidget {
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
               borderRadius: const BorderRadius.all(Radius.circular(8)),
-              color: theme.colorScheme.surfaceDim,
+              color: theme.colorScheme.surface,
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
@@ -126,9 +127,12 @@ class MarkPicker extends StatelessWidget {
               ],
             ),
           ),
-          const Padding(
-            padding: EdgeInsets.symmetric(vertical: 16.0),
-            child: Text("REMEMBER, X GOES FIRST"),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 16.0),
+            child: Text(
+              "REMEMBER, X GOES FIRST",
+              style: theme.textTheme.bodySmall,
+            ),
           ),
         ],
       ),
@@ -159,12 +163,13 @@ class Mark extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 48),
           decoration: BoxDecoration(
             borderRadius: const BorderRadius.all(Radius.circular(8)),
-            color: selectedMark == mark ? theme.colorScheme.surface : null,
+            color: selectedMark == mark ? theme.colorScheme.tertiary : null,
           ),
           child: Text(
             mark == BoardToken.x ? "X" : "O",
             style: theme.textTheme.displaySmall!.copyWith(
-                color: selectedMark == mark ? theme.colorScheme.primary : null,
+                color:
+                    selectedMark == mark ? theme.colorScheme.onTertiary : null,
                 fontWeight: FontWeight.bold),
           )),
     );
