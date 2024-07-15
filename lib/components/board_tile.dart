@@ -45,8 +45,10 @@ class _BoardTileState extends State<BoardTile> {
         },
         child: Container(
           decoration: BoxDecoration(
-            border: Border.all(),
-            borderRadius: BorderRadius.circular(4),
+            color: theme.colorScheme.surfaceContainer,
+            border: BorderDirectional(
+                bottom: BorderSide(width: 8, color: theme.colorScheme.shadow)),
+            borderRadius: BorderRadius.circular(16),
           ),
           child: Center(
             child: Text(
