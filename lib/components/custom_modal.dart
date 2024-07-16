@@ -123,7 +123,7 @@ class _CustomModalContent extends StatelessWidget {
 class TerminalStatePrompt extends StatelessWidget {
   final GameMode gameMode;
   final GameState gameState;
-  final BoardToken playerToken;
+  final BoardToken playerOneToken;
 
   static const winMsg = "YOU WIN!";
   static const loseMsg = "YOU LOSE";
@@ -134,7 +134,7 @@ class TerminalStatePrompt extends StatelessWidget {
     super.key,
     required this.gameMode,
     required this.gameState,
-    required this.playerToken,
+    required this.playerOneToken,
   });
 
   String _determineHeaderText() {
@@ -142,13 +142,13 @@ class TerminalStatePrompt extends StatelessWidget {
       case GameMode.playerVsComputer:
         switch (gameState) {
           case GameState.playerOneVictory:
-            if (playerToken == BoardToken.x) {
+            if (playerOneToken == BoardToken.x) {
               return winMsg;
             } else {
               return loseMsg;
             }
           case GameState.playerTwoVictory:
-            if (playerToken == BoardToken.o) {
+            if (playerOneToken == BoardToken.o) {
               return winMsg;
             } else {
               return loseMsg;
@@ -161,9 +161,13 @@ class TerminalStatePrompt extends StatelessWidget {
       case GameMode.playerVsPlayer:
         switch (gameState) {
           case GameState.playerOneVictory:
-            return "Player 1 wins!";
+            return playerOneToken == BoardToken.x
+                ? "Player 1 wins!"
+                : "Player 2 wins";
           case GameState.playerTwoVictory:
-            return "Player 2 wins!";
+            return playerOneToken == BoardToken.o
+                ? "Player 1 wins!"
+                : "Player 2 wins";
           case GameState.draw:
             return drawMsg;
           default:
