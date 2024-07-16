@@ -15,9 +15,11 @@ void main() {
       [BoardToken.x, BoardToken.x, BoardToken.o],
     ]);
 
-    expect(board.minimaxSearch(), BoardPosition(row: 1, col: 2));
+    expect(board.minimaxSearch(BoardToken.o), BoardPosition(row: 1, col: 2));
+    expect(board.minimaxSearch(BoardToken.x), BoardPosition(row: 2, col: 2));
 
-    expect(board2.minimaxSearch(), null);
+    expect(board2.minimaxSearch(BoardToken.o), null);
+    expect(board2.minimaxSearch(BoardToken.x), null);
   });
   test("check empty board for win", () {
     final board = TicTacToeBoard();
