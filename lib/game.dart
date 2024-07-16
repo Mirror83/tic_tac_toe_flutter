@@ -26,6 +26,8 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
 
   var computerIsMoving = false;
 
+  var showRestartModal = false;
+
   var gameState = GameState.playerOneTurn;
   final _tag = "TicTacToeGame";
 
@@ -112,29 +114,178 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
     }
   }
 
+  // void buildRestartModal() {
+  //   if (!showRestartModal) return;
+  // }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body: Column(
-          children: [
-            Header(
-              gameInfo: determineGameInfoText(),
-              refreshBoardCallBack: () {
+        body: Stack(children: [
+          Column(
+            children: [
+              Header(
+                gameInfo: determineGameInfoText(),
+                refreshBoardCallBack: () {
+                  setState(() {
+                    showRestartModal = true;
+                  });
+                },
+              ),
+              Board(
+                board: board,
+                makeMove: makeMove,
+                computerIsMoving: computerIsMoving,
+              ),
+            ],
+          ),
+          if (showRestartModal)
+            CustomModal(
+              promptWidget: Text("RESTART GAME?",
+                  style: Theme.of(context).textTheme.headlineLarge),
+              confirmText: "OK, RESTART",
+              cancelText: "NO, CANCEL",
+              dismiss: () {
+                setState(() {
+                  showRestartModal = false;
+                });
+              },
+              onCancel: () {
+                setState(() {
+                  showRestartModal = false;
+                });
+              },
+              onConfirm: () {
                 board.clearBoard();
                 setState(() {
                   gameState = GameState.playerOneTurn;
+                  showRestartModal = false;
                 });
               },
             ),
-            Board(
-              board: board,
-              makeMove: makeMove,
-              computerIsMoving: computerIsMoving,
-            ),
+        ]),
+      ),
+    );
+  }
+}
+
+class CustomModal extends StatelessWidget {
+  final void Function() dismiss;
+  final void Function() onConfirm;
+  final void Function() onCancel;
+
+  final Widget promptWidget;
+  final String confirmText;
+  final String cancelText;
+
+  const CustomModal(
+      {super.key,
+      required this.dismiss,
+      required this.onConfirm,
+      required this.onCancel,
+      required this.promptWidget,
+      required this.confirmText,
+      required this.cancelText});
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        CustomModalOverlay(dismiss: dismiss),
+        CustomModalContent(
+          onCancel: onCancel,
+          onConfirm: onConfirm,
+          promptWidget: promptWidget,
+          confirmText: confirmText,
+          cancelText: cancelText,
+        ),
+      ],
+    );
+  }
+}
+
+class CustomModalOverlay extends StatelessWidget {
+  const CustomModalOverlay({
+    super.key,
+    required this.dismiss,
+  });
+
+  final void Function() dismiss;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: dismiss,
+      child: Container(
+        color: const Color.fromARGB(150, 0, 0, 0),
+        child: const Column(
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            Row(
+              mainAxisSize: MainAxisSize.max,
+            )
           ],
         ),
       ),
+    );
+  }
+}
+
+class CustomModalContent extends StatelessWidget {
+  const CustomModalContent({
+    super.key,
+    required this.onCancel,
+    required this.onConfirm,
+    required this.promptWidget,
+    required this.confirmText,
+    required this.cancelText,
+  });
+
+  final Widget promptWidget;
+  final String confirmText;
+  final String cancelText;
+
+  final void Function() onCancel;
+  final void Function() onConfirm;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisSize: MainAxisSize.max,
+      children: [
+        Container(
+          color: theme.colorScheme.surfaceContainer,
+          padding: const EdgeInsets.symmetric(vertical: 48),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Column(
+                children: [
+                  promptWidget,
+                  const SizedBox(height: 16),
+                  Row(
+                    children: [
+                      OutlinedButton(
+                        onPressed: onCancel,
+                        child: Text(cancelText),
+                      ),
+                      const SizedBox(width: 16),
+                      OutlinedButton(
+                        onPressed: onConfirm,
+                        child: Text(confirmText),
+                      )
+                    ],
+                  )
+                ],
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }
