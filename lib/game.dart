@@ -138,7 +138,10 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
           if (showRestartModal)
             CustomModal(
               promptWidget: Text("RESTART GAME?",
-                  style: Theme.of(context).textTheme.headlineLarge),
+                  style: Theme.of(context)
+                      .textTheme
+                      .headlineSmall!
+                      .copyWith(fontWeight: FontWeight.bold)),
               confirmText: "OK, RESTART",
               cancelText: "NO, CANCEL",
               dismiss: () {
