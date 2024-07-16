@@ -99,7 +99,7 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
       case BoardToken.x:
         switch (gameState) {
           case GameState.playerOneTurn:
-            board.placeToken(position, BoardToken.x);
+            if (!board.placeToken(position, BoardToken.x)) return;
             evaluateBoard();
 
             if (widget.gameMode == GameMode.playerVsComputer &&
@@ -110,7 +110,7 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
             break;
           case GameState.playerTwoTurn:
             if (widget.gameMode == GameMode.playerVsPlayer) {
-              board.placeToken(position, BoardToken.o);
+              if (!board.placeToken(position, BoardToken.o)) return;
               evaluateBoard();
             }
             break;
