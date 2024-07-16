@@ -15,12 +15,12 @@ enum GameMode {
 
 class TicTacToeGame extends StatefulWidget {
   final GameMode gameMode;
-  final BoardToken playerOneMark;
+  final BoardToken playerOneToken;
 
   const TicTacToeGame({
     super.key,
     this.gameMode = GameMode.playerVsComputer,
-    required this.playerOneMark,
+    required this.playerOneToken,
   });
 
   @override
@@ -79,7 +79,7 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
     });
     Timer(Duration(seconds: Random().nextInt(1) + 6), () {
       final computerMark =
-          widget.playerOneMark == BoardToken.x ? BoardToken.o : BoardToken.x;
+          widget.playerOneToken == BoardToken.x ? BoardToken.o : BoardToken.x;
 
       final computerPosition = board.minimaxSearch(computerMark);
 
@@ -95,7 +95,7 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
   }
 
   void makeMove(BoardPosition position) {
-    switch (widget.playerOneMark) {
+    switch (widget.playerOneToken) {
       case BoardToken.x:
         switch (gameState) {
           case GameState.playerOneTurn:
@@ -145,7 +145,7 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
   void initState() {
     super.initState();
     if (widget.gameMode == GameMode.playerVsComputer &&
-        widget.playerOneMark == BoardToken.o) makeComputerMove();
+        widget.playerOneToken == BoardToken.o) makeComputerMove();
   }
 
   @override
@@ -195,6 +195,10 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
                   gameState = GameState.playerOneTurn;
                   showRestartModal = false;
                 });
+                if (widget.gameMode == GameMode.playerVsComputer &&
+                    widget.playerOneToken == BoardToken.o) {
+                  makeComputerMove();
+                }
               },
             ),
           if (showTerminalStateModal)
@@ -210,13 +214,17 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
                   gameState = GameState.playerOneTurn;
                   showTerminalStateModal = false;
                 });
+                if (widget.gameMode == GameMode.playerVsComputer &&
+                    widget.playerOneToken == BoardToken.o) {
+                  makeComputerMove();
+                }
               },
               onCancel: () {
                 Navigator.of(context).pop();
               },
               promptWidget: TerminalStatePrompt(
                 gameMode: widget.gameMode,
-                playerToken: widget.playerOneMark,
+                playerOneToken: widget.playerOneToken,
                 gameState: gameState,
               ),
               confirmText: "NEXT ROUND",
