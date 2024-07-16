@@ -29,7 +29,7 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
   var gameState = GameState.playerOneTurn;
   final _tag = "TicTacToeGame";
 
-  String determineHeaderText() {
+  String determineGameInfoText() {
     switch (gameState) {
       case GameState.playerOneTurn:
         return "X's turn.";
@@ -119,7 +119,7 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
         body: Column(
           children: [
             Header(
-              gameInfo: determineHeaderText(),
+              gameInfo: determineGameInfoText(),
               refreshBoardCallBack: () {
                 board.clearBoard();
                 setState(() {
