@@ -57,26 +57,32 @@ class NewGameButtons extends StatelessWidget {
     super.key,
   });
 
+  void _startNewGame(BuildContext context, GameMode gameMode) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => TicTacToeGame(
+          gameMode: gameMode,
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         OutlinedButton(
-            onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => const TicTacToeGame(
-                        gameMode: GameMode.playerVsComputer,
-                      )));
-            },
-            child: const Text("NEW GAME (VS CPU)")),
+          onPressed: () {
+            _startNewGame(context, GameMode.playerVsComputer);
+          },
+          child: const Text("NEW GAME (VS CPU)"),
+        ),
         OutlinedButton(
-            onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => const TicTacToeGame(
-                        gameMode: GameMode.playerVsPlayer,
-                      )));
-            },
-            child: const Text("NEW GAME (VS PLAYER)")),
+          onPressed: () {
+            _startNewGame(context, GameMode.playerVsPlayer);
+          },
+          child: const Text("NEW GAME (VS PLAYER)"),
+        ),
       ],
     );
   }
