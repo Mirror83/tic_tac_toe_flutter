@@ -153,10 +153,11 @@ class TicTacToeBoard {
     }
   }
 
-  BoardPosition? minimaxSearch() {
-    // We are calling minValue since the computer-controlled player will
-    // always be player 2.
-    final (_, move) = _minValue(currentPlayer: BoardToken.o);
+  BoardPosition? minimaxSearch(BoardToken computerToken) {
+    final (_, move) = computerToken == BoardToken.x
+        ? _maxValue(currentPlayer: BoardToken.x)
+        : _minValue(currentPlayer: BoardToken.o);
+
     return move;
   }
 
