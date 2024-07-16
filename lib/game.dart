@@ -4,7 +4,7 @@ import 'dart:math' show Random;
 import 'package:flutter/material.dart';
 import 'package:tic_tac_toe/board.dart';
 import 'package:tic_tac_toe/components/board.dart';
-import 'dart:developer' show log;
+import 'package:tic_tac_toe/components/custom_modal.dart';
 
 import 'package:tic_tac_toe/components/header.dart';
 
@@ -28,8 +28,9 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
 
   var showRestartModal = false;
 
+  var showTerminalStateModal = false;
+
   var gameState = GameState.playerOneTurn;
-  final _tag = "TicTacToeGame";
 
   String determineGameInfoText() {
     switch (gameState) {
@@ -54,8 +55,10 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
         } else {
           gameState = GameState.playerTwoVictory;
         }
+        showTerminalStateModal = true;
       } else if (board.checkForDraw() == true) {
         gameState = GameState.draw;
+        showTerminalStateModal = true;
       } else if (gameState == GameState.playerOneTurn) {
         gameState = GameState.playerTwoTurn;
       } else if (gameState == GameState.playerTwoTurn) {
@@ -102,15 +105,7 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
           evaluateBoard();
         }
         break;
-      case GameState.playerOneVictory:
-        log("Player one wins!", name: _tag);
-        break;
-      case GameState.playerTwoVictory:
-        log("Player two wins!", name: _tag);
-        break;
-      case GameState.draw:
-        log("Game is a draw", name: _tag);
-        break;
+      default:
     }
   }
 
@@ -164,128 +159,32 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
                 });
               },
             ),
+          if (showTerminalStateModal)
+            CustomModal(
+              dismiss: () {
+                setState(() {
+                  showTerminalStateModal = false;
+                });
+              },
+              onConfirm: () {
+                setState(() {
+                  board.clearBoard();
+                  gameState = GameState.playerOneTurn;
+                  showTerminalStateModal = false;
+                });
+              },
+              onCancel: () {
+                Navigator.of(context).pop();
+              },
+              promptWidget: TerminalStatePrompt(
+                gameMode: widget.gameMode,
+                gameState: gameState,
+              ),
+              confirmText: "NEXT ROUND",
+              cancelText: "QUIT",
+            )
         ]),
       ),
-    );
-  }
-}
-
-class CustomModal extends StatelessWidget {
-  final void Function() dismiss;
-  final void Function() onConfirm;
-  final void Function() onCancel;
-
-  final Widget promptWidget;
-  final String confirmText;
-  final String cancelText;
-
-  const CustomModal(
-      {super.key,
-      required this.dismiss,
-      required this.onConfirm,
-      required this.onCancel,
-      required this.promptWidget,
-      required this.confirmText,
-      required this.cancelText});
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        CustomModalOverlay(dismiss: dismiss),
-        CustomModalContent(
-          onCancel: onCancel,
-          onConfirm: onConfirm,
-          promptWidget: promptWidget,
-          confirmText: confirmText,
-          cancelText: cancelText,
-        ),
-      ],
-    );
-  }
-}
-
-class CustomModalOverlay extends StatelessWidget {
-  const CustomModalOverlay({
-    super.key,
-    required this.dismiss,
-  });
-
-  final void Function() dismiss;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: dismiss,
-      child: Container(
-        color: const Color.fromARGB(150, 0, 0, 0),
-        child: const Column(
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            Row(
-              mainAxisSize: MainAxisSize.max,
-            )
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class CustomModalContent extends StatelessWidget {
-  const CustomModalContent({
-    super.key,
-    required this.onCancel,
-    required this.onConfirm,
-    required this.promptWidget,
-    required this.confirmText,
-    required this.cancelText,
-  });
-
-  final Widget promptWidget;
-  final String confirmText;
-  final String cancelText;
-
-  final void Function() onCancel;
-  final void Function() onConfirm;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      mainAxisSize: MainAxisSize.max,
-      children: [
-        Container(
-          color: theme.colorScheme.surfaceContainer,
-          padding: const EdgeInsets.symmetric(vertical: 48),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Column(
-                children: [
-                  promptWidget,
-                  const SizedBox(height: 16),
-                  Row(
-                    children: [
-                      OutlinedButton(
-                        onPressed: onCancel,
-                        child: Text(cancelText),
-                      ),
-                      const SizedBox(width: 16),
-                      OutlinedButton(
-                        onPressed: onConfirm,
-                        child: Text(confirmText),
-                      )
-                    ],
-                  )
-                ],
-              ),
-            ],
-          ),
-        ),
-      ],
     );
   }
 }
