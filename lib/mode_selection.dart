@@ -19,6 +19,17 @@ class _ModeSelectionState extends State<ModeSelection> {
     });
   }
 
+  void _startNewGame(BuildContext context, GameMode gameMode) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => TicTacToeGame(
+          gameMode: gameMode,
+          playerOneMark: playerOneMark,
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,7 +52,9 @@ class _ModeSelectionState extends State<ModeSelection> {
                   const SizedBox(
                     height: 16,
                   ),
-                  const NewGameButtons(),
+                  NewGameButtons(
+                    startNewGame: _startNewGame,
+                  ),
                 ],
               ),
             ),
@@ -55,17 +68,10 @@ class _ModeSelectionState extends State<ModeSelection> {
 class NewGameButtons extends StatelessWidget {
   const NewGameButtons({
     super.key,
+    required this.startNewGame,
   });
 
-  void _startNewGame(BuildContext context, GameMode gameMode) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => TicTacToeGame(
-          gameMode: gameMode,
-        ),
-      ),
-    );
-  }
+  final void Function(BuildContext, GameMode) startNewGame;
 
   @override
   Widget build(BuildContext context) {
@@ -73,13 +79,13 @@ class NewGameButtons extends StatelessWidget {
       children: [
         OutlinedButton(
           onPressed: () {
-            _startNewGame(context, GameMode.playerVsComputer);
+            startNewGame(context, GameMode.playerVsComputer);
           },
           child: const Text("NEW GAME (VS CPU)"),
         ),
         OutlinedButton(
           onPressed: () {
-            _startNewGame(context, GameMode.playerVsPlayer);
+            startNewGame(context, GameMode.playerVsPlayer);
           },
           child: const Text("NEW GAME (VS PLAYER)"),
         ),
