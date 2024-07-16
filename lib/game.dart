@@ -77,7 +77,7 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
     setState(() {
       computerIsMoving = true;
     });
-    Timer(Duration(seconds: Random().nextInt(1) + 6), () {
+    Timer(Duration(seconds: Random().nextInt(1) + 3), () {
       final computerMark =
           widget.playerOneToken == BoardToken.x ? BoardToken.o : BoardToken.x;
 
