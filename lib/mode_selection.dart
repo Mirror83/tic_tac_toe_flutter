@@ -11,11 +11,11 @@ class ModeSelection extends StatefulWidget {
 }
 
 class _ModeSelectionState extends State<ModeSelection> {
-  var playerOneMark = BoardToken.x;
+  var playerOneToken = BoardToken.x;
 
-  void changeMark(BoardToken mark) {
+  void changePlayerOneToken(BoardToken token) {
     setState(() {
-      playerOneMark = mark;
+      playerOneToken = token;
     });
   }
 
@@ -24,7 +24,7 @@ class _ModeSelectionState extends State<ModeSelection> {
       MaterialPageRoute(
         builder: (context) => TicTacToeGame(
           gameMode: gameMode,
-          playerOneMark: playerOneMark,
+          playerOneToken: playerOneToken,
         ),
       ),
     );
@@ -45,9 +45,9 @@ class _ModeSelectionState extends State<ModeSelection> {
                   const SizedBox(
                     height: 16,
                   ),
-                  MarkPicker(
-                    changeMark: changeMark,
-                    selectedMark: playerOneMark,
+                  TokenPicker(
+                    changeToken: changePlayerOneToken,
+                    selectedToken: playerOneToken,
                   ),
                   const SizedBox(
                     height: 16,
@@ -94,11 +94,11 @@ class NewGameButtons extends StatelessWidget {
   }
 }
 
-class MarkPicker extends StatelessWidget {
-  final BoardToken selectedMark;
-  final void Function(BoardToken) changeMark;
-  const MarkPicker(
-      {super.key, required this.changeMark, required this.selectedMark});
+class TokenPicker extends StatelessWidget {
+  final BoardToken selectedToken;
+  final void Function(BoardToken) changeToken;
+  const TokenPicker(
+      {super.key, required this.changeToken, required this.selectedToken});
 
   @override
   Widget build(BuildContext context) {
@@ -116,7 +116,7 @@ class MarkPicker extends StatelessWidget {
         children: [
           const Padding(
             padding: EdgeInsets.symmetric(vertical: 16.0),
-            child: Text("PICK PLAYER 1'S MARK"),
+            child: Text("PICK PLAYER 1'S TOKEN"),
           ),
           Container(
             padding: const EdgeInsets.all(8),
@@ -128,15 +128,15 @@ class MarkPicker extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Mark(
-                  changeMark: changeMark,
-                  selectedMark: selectedMark,
-                  mark: BoardToken.x,
+                TokenWidget(
+                  changeToken: changeToken,
+                  selectedToken: selectedToken,
+                  token: BoardToken.x,
                 ),
-                Mark(
-                  changeMark: changeMark,
-                  selectedMark: selectedMark,
-                  mark: BoardToken.o,
+                TokenWidget(
+                  changeToken: changeToken,
+                  selectedToken: selectedToken,
+                  token: BoardToken.o,
                 )
               ],
             ),
@@ -154,36 +154,37 @@ class MarkPicker extends StatelessWidget {
   }
 }
 
-class Mark extends StatelessWidget {
-  const Mark({
+class TokenWidget extends StatelessWidget {
+  const TokenWidget({
     super.key,
-    required this.selectedMark,
-    required this.mark,
-    required this.changeMark,
+    required this.selectedToken,
+    required this.token,
+    required this.changeToken,
   });
 
-  final BoardToken selectedMark;
-  final BoardToken mark;
-  final void Function(BoardToken) changeMark;
+  final BoardToken selectedToken;
+  final BoardToken token;
+  final void Function(BoardToken) changeToken;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return GestureDetector(
       onTap: () {
-        changeMark(mark);
+        changeToken(token);
       },
       child: Container(
           padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 48),
           decoration: BoxDecoration(
             borderRadius: const BorderRadius.all(Radius.circular(8)),
-            color: selectedMark == mark ? theme.colorScheme.tertiary : null,
+            color: selectedToken == token ? theme.colorScheme.tertiary : null,
           ),
           child: Text(
-            mark == BoardToken.x ? "X" : "O",
+            token == BoardToken.x ? "X" : "O",
             style: theme.textTheme.displaySmall!.copyWith(
-                color:
-                    selectedMark == mark ? theme.colorScheme.onTertiary : null,
+                color: selectedToken == token
+                    ? theme.colorScheme.onTertiary
+                    : null,
                 fontWeight: FontWeight.bold),
           )),
     );
