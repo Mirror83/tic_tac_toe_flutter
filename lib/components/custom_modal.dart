@@ -124,7 +124,6 @@ class TerminalStatePrompt extends StatelessWidget {
   final GameMode gameMode;
   final GameState gameState;
   final BoardToken playerToken;
-  final BoardToken? computerToken;
 
   static const winMsg = "YOU WIN!";
   static const loseMsg = "YOU LOSE";
@@ -135,8 +134,7 @@ class TerminalStatePrompt extends StatelessWidget {
     super.key,
     required this.gameMode,
     required this.gameState,
-    this.playerToken = BoardToken.x,
-    this.computerToken = BoardToken.o,
+    required this.playerToken,
   });
 
   String _determineHeaderText() {
