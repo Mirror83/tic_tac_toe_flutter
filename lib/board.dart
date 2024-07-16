@@ -76,13 +76,18 @@ class TicTacToeBoard {
     board.forEach(action);
   }
 
-  void placeToken(BoardPosition position, BoardToken token) {
-    assert(position.isValid() && token != BoardToken.empty);
-
-    // Only place token if position is empty.
-    if (board[position.row][position.col] == BoardToken.empty) {
+  /// Returns false if [token] cannot be placed at [position].
+  /// Otherwise places [token] at [position] and returns true
+  bool placeToken(BoardPosition position, BoardToken token) {
+    if (position.isValid() &&
+        token != BoardToken.empty &&
+        board[position.row][position.col] == BoardToken.empty) {
+      // Only place token if position is empty.
       board[position.row][position.col] = token;
+      return true;
     }
+
+    return false;
   }
 
   bool _checkForHorizontalWin() {
