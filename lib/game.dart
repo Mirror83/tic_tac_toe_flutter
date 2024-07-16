@@ -15,7 +15,13 @@ enum GameMode {
 
 class TicTacToeGame extends StatefulWidget {
   final GameMode gameMode;
-  const TicTacToeGame({super.key, this.gameMode = GameMode.playerVsComputer});
+  final BoardToken playerOneMark;
+
+  const TicTacToeGame({
+    super.key,
+    this.gameMode = GameMode.playerVsComputer,
+    required this.playerOneMark,
+  });
 
   @override
   State<TicTacToeGame> createState() => _TicTacToeGameState();
@@ -72,10 +78,13 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
       computerIsMoving = true;
     });
     Timer(Duration(seconds: Random().nextInt(1) + 6), () {
-      final computerPosition = board.minimaxSearch();
+      final computerMark =
+          widget.playerOneMark == BoardToken.x ? BoardToken.o : BoardToken.x;
+
+      final computerPosition = board.minimaxSearch(computerMark);
 
       if (computerPosition != null) {
-        board.placeToken(computerPosition, BoardToken.o);
+        board.placeToken(computerPosition, computerMark);
       }
       evaluateBoard();
 
@@ -86,32 +95,58 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
   }
 
   void makeMove(BoardPosition position) {
-    switch (gameState) {
-      case GameState.playerOneTurn:
-        board.placeToken(position, BoardToken.x);
-        // Check board for new game state
-        evaluateBoard();
+    switch (widget.playerOneMark) {
+      case BoardToken.x:
+        switch (gameState) {
+          case GameState.playerOneTurn:
+            board.placeToken(position, BoardToken.x);
+            evaluateBoard();
 
-        if (widget.gameMode == GameMode.playerVsComputer &&
-            gameState == GameState.playerTwoTurn) {
-          makeComputerMove();
-        }
+            if (widget.gameMode == GameMode.playerVsComputer &&
+                gameState == GameState.playerTwoTurn) {
+              makeComputerMove();
+            }
 
-        break;
-      case GameState.playerTwoTurn:
-        if (widget.gameMode == GameMode.playerVsPlayer) {
-          board.placeToken(position, BoardToken.o);
-          // Check board for new game state
-          evaluateBoard();
+            break;
+          case GameState.playerTwoTurn:
+            if (widget.gameMode == GameMode.playerVsPlayer) {
+              board.placeToken(position, BoardToken.o);
+              evaluateBoard();
+            }
+            break;
+          default:
         }
-        break;
       default:
+        switch (gameState) {
+          case GameState.playerOneTurn:
+            if (widget.gameMode == GameMode.playerVsPlayer) {
+              board.placeToken(position, BoardToken.x);
+              evaluateBoard();
+            }
+            break;
+          case GameState.playerTwoTurn:
+            board.placeToken(position, BoardToken.o);
+            evaluateBoard();
+
+            if (widget.gameMode == GameMode.playerVsComputer &&
+                gameState == GameState.playerOneTurn) {
+              makeComputerMove();
+            }
+            break;
+          default:
+        }
     }
   }
 
   // void buildRestartModal() {
   //   if (!showRestartModal) return;
   // }
+  @override
+  void initState() {
+    super.initState();
+    if (widget.gameMode == GameMode.playerVsComputer &&
+        widget.playerOneMark == BoardToken.o) makeComputerMove();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -181,6 +216,7 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
               },
               promptWidget: TerminalStatePrompt(
                 gameMode: widget.gameMode,
+                playerToken: widget.playerOneMark,
                 gameState: gameState,
               ),
               confirmText: "NEXT ROUND",
