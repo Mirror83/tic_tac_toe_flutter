@@ -28,26 +28,13 @@ class TicTacToeGame extends StatefulWidget {
 }
 
 class _TicTacToeGameState extends State<TicTacToeGame> {
-  final TicTacToeBoard board = TicTacToeBoard();
+  final board = TicTacToeBoard();
+  var gameState = GameState.playerOneTurn;
 
   var computerIsMoving = false;
 
   var showRestartModal = false;
-
   var showTerminalStateModal = false;
-
-  var gameState = GameState.playerOneTurn;
-
-  BoardToken determineCurrentPlayer() {
-    switch (gameState) {
-      case GameState.playerOneTurn:
-        return BoardToken.x;
-      case GameState.playerTwoTurn:
-        return BoardToken.o;
-      default:
-        return BoardToken.empty;
-    }
-  }
 
   void evaluateBoard() {
     setState(() {
@@ -134,9 +121,68 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
     }
   }
 
-  // void buildRestartModal() {
-  //   if (!showRestartModal) return;
-  // }
+  Widget _restartModal() {
+    return CustomModal(
+      promptWidget: Text(
+        "RESTART GAME?",
+        style: Theme.of(context)
+            .textTheme
+            .headlineSmall!
+            .copyWith(fontWeight: FontWeight.bold),
+      ),
+      confirmText: "OK, RESTART",
+      cancelText: "NO, CANCEL",
+      dismiss: () {
+        setState(() {
+          showRestartModal = false;
+        });
+      },
+      onCancel: () {
+        setState(() {
+          showRestartModal = false;
+        });
+      },
+      onConfirm: () {
+        board.clearBoard();
+        setState(() {
+          gameState = GameState.playerOneTurn;
+          showRestartModal = false;
+        });
+        if (widget.gameMode == GameMode.playerVsComputer &&
+            widget.playerOneToken == BoardToken.o) {
+          makeComputerMove();
+        }
+      },
+    );
+  }
+
+  Widget _terminalStateModal() {
+    return CustomModal(
+      dismiss: () {},
+      onConfirm: () {
+        setState(() {
+          board.clearBoard();
+          gameState = GameState.playerOneTurn;
+          showTerminalStateModal = false;
+        });
+        if (widget.gameMode == GameMode.playerVsComputer &&
+            widget.playerOneToken == BoardToken.o) {
+          makeComputerMove();
+        }
+      },
+      onCancel: () {
+        Navigator.of(context).pop();
+      },
+      promptWidget: TerminalStatePrompt(
+        gameMode: widget.gameMode,
+        playerOneToken: widget.playerOneToken,
+        gameState: gameState,
+      ),
+      confirmText: "NEXT ROUND",
+      cancelText: "QUIT",
+    );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -153,7 +199,7 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
             Column(
               children: [
                 Header(
-                  currentPlayer: determineCurrentPlayer(),
+                  gameState: gameState,
                   refreshBoardCallBack: () {
                     setState(() {
                       showRestartModal = true;
@@ -167,64 +213,8 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
                 ),
               ],
             ),
-            if (showRestartModal)
-              CustomModal(
-                promptWidget: Text(
-                  "RESTART GAME?",
-                  style: Theme.of(context)
-                      .textTheme
-                      .headlineSmall!
-                      .copyWith(fontWeight: FontWeight.bold),
-                ),
-                confirmText: "OK, RESTART",
-                cancelText: "NO, CANCEL",
-                dismiss: () {
-                  setState(() {
-                    showRestartModal = false;
-                  });
-                },
-                onCancel: () {
-                  setState(() {
-                    showRestartModal = false;
-                  });
-                },
-                onConfirm: () {
-                  board.clearBoard();
-                  setState(() {
-                    gameState = GameState.playerOneTurn;
-                    showRestartModal = false;
-                  });
-                  if (widget.gameMode == GameMode.playerVsComputer &&
-                      widget.playerOneToken == BoardToken.o) {
-                    makeComputerMove();
-                  }
-                },
-              ),
-            if (showTerminalStateModal)
-              CustomModal(
-                dismiss: () {},
-                onConfirm: () {
-                  setState(() {
-                    board.clearBoard();
-                    gameState = GameState.playerOneTurn;
-                    showTerminalStateModal = false;
-                  });
-                  if (widget.gameMode == GameMode.playerVsComputer &&
-                      widget.playerOneToken == BoardToken.o) {
-                    makeComputerMove();
-                  }
-                },
-                onCancel: () {
-                  Navigator.of(context).pop();
-                },
-                promptWidget: TerminalStatePrompt(
-                  gameMode: widget.gameMode,
-                  playerOneToken: widget.playerOneToken,
-                  gameState: gameState,
-                ),
-                confirmText: "NEXT ROUND",
-                cancelText: "QUIT",
-              )
+            if (showRestartModal) _restartModal(),
+            if (showTerminalStateModal) _terminalStateModal(),
           ],
         ),
       ),
