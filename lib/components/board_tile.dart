@@ -35,27 +35,31 @@ class _BoardTileState extends State<BoardTile> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return GestureDetector(
-        onTap: () {
-          if (widget.canPlaceToken) {
-            widget.placeToken(widget.position);
-          } else {
-            log("Cannot place token yet.", name: "placeTokenBoardTile");
-          }
-        },
-        child: Container(
-          decoration: BoxDecoration(
-            color: theme.colorScheme.surfaceContainer,
-            border: BorderDirectional(
-                bottom: BorderSide(width: 8, color: theme.colorScheme.shadow)),
-            borderRadius: BorderRadius.circular(16),
-          ),
-          child: Center(
-            child: Text(
-              tokenToString(),
-              style: theme.textTheme.headlineLarge,
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      child: GestureDetector(
+          onTap: () {
+            if (widget.canPlaceToken) {
+              widget.placeToken(widget.position);
+            } else {
+              log("Cannot place token yet.", name: "placeTokenBoardTile");
+            }
+          },
+          child: Container(
+            decoration: BoxDecoration(
+              color: theme.colorScheme.surfaceContainer,
+              border: BorderDirectional(
+                  bottom:
+                      BorderSide(width: 8, color: theme.colorScheme.shadow)),
+              borderRadius: BorderRadius.circular(16),
             ),
-          ),
-        ));
+            child: Center(
+              child: Text(
+                tokenToString(),
+                style: theme.textTheme.headlineLarge,
+              ),
+            ),
+          )),
+    );
   }
 }
