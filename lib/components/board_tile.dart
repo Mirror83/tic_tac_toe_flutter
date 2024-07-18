@@ -56,10 +56,21 @@ class _BoardTileState extends State<BoardTile> {
             child: Center(
               child: Text(
                 tokenToString(),
-                style: theme.textTheme.headlineLarge,
+                style: theme.textTheme.displaySmall!.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: determineTokenColour(theme),
+                ),
               ),
             ),
           )),
     );
+  }
+
+  Color? determineTokenColour(ThemeData theme) {
+    return widget.token == BoardToken.x
+        ? theme.colorScheme.primary
+        : widget.token == BoardToken.o
+            ? theme.colorScheme.secondary
+            : null;
   }
 }
