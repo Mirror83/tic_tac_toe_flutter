@@ -38,18 +38,14 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
 
   var gameState = GameState.playerOneTurn;
 
-  String determineGameInfoText() {
+  BoardToken determineCurrentPlayer() {
     switch (gameState) {
       case GameState.playerOneTurn:
-        return "X's turn.";
+        return BoardToken.x;
       case GameState.playerTwoTurn:
-        return "O's turn.";
-      case GameState.playerOneVictory:
-        return "X wins!";
-      case GameState.playerTwoVictory:
-        return "O wins!";
-      case GameState.draw:
-        return "It's a draw";
+        return BoardToken.o;
+      default:
+        return BoardToken.empty;
     }
   }
 
@@ -157,7 +153,7 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
             Column(
               children: [
                 Header(
-                  gameInfo: determineGameInfoText(),
+                  currentPlayer: determineCurrentPlayer(),
                   refreshBoardCallBack: () {
                     setState(() {
                       showRestartModal = true;
@@ -206,11 +202,7 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
               ),
             if (showTerminalStateModal)
               CustomModal(
-                dismiss: () {
-                  setState(() {
-                    showTerminalStateModal = false;
-                  });
-                },
+                dismiss: () {},
                 onConfirm: () {
                   setState(() {
                     board.clearBoard();
