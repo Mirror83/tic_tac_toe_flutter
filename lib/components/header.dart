@@ -3,12 +3,21 @@ import 'package:tic_tac_toe/board.dart';
 import 'package:tic_tac_toe/components/pseudo_logo.dart';
 
 class Header extends StatelessWidget {
-  final BoardToken currentPlayer;
+  final GameState gameState;
   final void Function() refreshBoardCallBack;
   const Header(
-      {super.key,
-      required this.currentPlayer,
-      required this.refreshBoardCallBack});
+      {super.key, required this.gameState, required this.refreshBoardCallBack});
+
+  BoardToken determineCurrentPlayer() {
+    switch (gameState) {
+      case GameState.playerOneTurn:
+        return BoardToken.x;
+      case GameState.playerTwoTurn:
+        return BoardToken.o;
+      default:
+        return BoardToken.empty;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +27,7 @@ class Header extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           const PseudoLogo(),
-          TurnIndicator(currentPlayer: currentPlayer),
+          TurnIndicator(currentPlayer: determineCurrentPlayer()),
           RefreshButton(refreshBoardCallBack: refreshBoardCallBack),
         ],
       ),
