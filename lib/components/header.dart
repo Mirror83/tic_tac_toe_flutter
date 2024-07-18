@@ -16,12 +16,26 @@ class Header extends StatelessWidget {
         children: <Widget>[
           const PseudoLogo(),
           Text(gameInfo),
-          TextButton(
-            onPressed: refreshBoardCallBack,
-            child: const Text("Refresh"),
-          ),
+          RefreshButton(refreshBoardCallBack: refreshBoardCallBack),
         ],
       ),
+    );
+  }
+}
+
+class RefreshButton extends StatelessWidget {
+  const RefreshButton({
+    super.key,
+    required this.refreshBoardCallBack,
+  });
+
+  final void Function() refreshBoardCallBack;
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      onPressed: refreshBoardCallBack,
+      icon: const Icon(Icons.refresh),
     );
   }
 }
