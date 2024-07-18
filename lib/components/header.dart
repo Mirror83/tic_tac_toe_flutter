@@ -19,6 +19,10 @@ class Header extends StatelessWidget {
     }
   }
 
+  void goBackHome(BuildContext context) {
+    Navigator.of(context).pop();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -26,7 +30,15 @@ class Header extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          const PseudoLogo(),
+          MouseRegion(
+            cursor: SystemMouseCursors.click,
+            child: GestureDetector(
+              onTap: () {
+                goBackHome(context);
+              },
+              child: const PseudoLogo(),
+            ),
+          ),
           TurnIndicator(currentPlayer: determineCurrentPlayer()),
           RefreshButton(refreshBoardCallBack: refreshBoardCallBack),
         ],
