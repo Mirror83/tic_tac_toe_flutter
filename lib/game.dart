@@ -150,87 +150,91 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: Stack(children: [
-          Column(
-            children: [
-              Header(
-                gameInfo: determineGameInfoText(),
-                refreshBoardCallBack: () {
-                  setState(() {
-                    showRestartModal = true;
-                  });
-                },
-              ),
-              Board(
-                board: board,
-                makeMove: makeMove,
-                computerIsMoving: computerIsMoving,
-              ),
-            ],
-          ),
-          if (showRestartModal)
-            CustomModal(
-              promptWidget: Text("RESTART GAME?",
+    return Scaffold(
+      body: SafeArea(
+        child: Stack(
+          children: [
+            Column(
+              children: [
+                Header(
+                  gameInfo: determineGameInfoText(),
+                  refreshBoardCallBack: () {
+                    setState(() {
+                      showRestartModal = true;
+                    });
+                  },
+                ),
+                Board(
+                  board: board,
+                  makeMove: makeMove,
+                  computerIsMoving: computerIsMoving,
+                ),
+              ],
+            ),
+            if (showRestartModal)
+              CustomModal(
+                promptWidget: Text(
+                  "RESTART GAME?",
                   style: Theme.of(context)
                       .textTheme
                       .headlineSmall!
-                      .copyWith(fontWeight: FontWeight.bold)),
-              confirmText: "OK, RESTART",
-              cancelText: "NO, CANCEL",
-              dismiss: () {
-                setState(() {
-                  showRestartModal = false;
-                });
-              },
-              onCancel: () {
-                setState(() {
-                  showRestartModal = false;
-                });
-              },
-              onConfirm: () {
-                board.clearBoard();
-                setState(() {
-                  gameState = GameState.playerOneTurn;
-                  showRestartModal = false;
-                });
-                if (widget.gameMode == GameMode.playerVsComputer &&
-                    widget.playerOneToken == BoardToken.o) {
-                  makeComputerMove();
-                }
-              },
-            ),
-          if (showTerminalStateModal)
-            CustomModal(
-              dismiss: () {
-                setState(() {
-                  showTerminalStateModal = false;
-                });
-              },
-              onConfirm: () {
-                setState(() {
+                      .copyWith(fontWeight: FontWeight.bold),
+                ),
+                confirmText: "OK, RESTART",
+                cancelText: "NO, CANCEL",
+                dismiss: () {
+                  setState(() {
+                    showRestartModal = false;
+                  });
+                },
+                onCancel: () {
+                  setState(() {
+                    showRestartModal = false;
+                  });
+                },
+                onConfirm: () {
                   board.clearBoard();
-                  gameState = GameState.playerOneTurn;
-                  showTerminalStateModal = false;
-                });
-                if (widget.gameMode == GameMode.playerVsComputer &&
-                    widget.playerOneToken == BoardToken.o) {
-                  makeComputerMove();
-                }
-              },
-              onCancel: () {
-                Navigator.of(context).pop();
-              },
-              promptWidget: TerminalStatePrompt(
-                gameMode: widget.gameMode,
-                playerOneToken: widget.playerOneToken,
-                gameState: gameState,
+                  setState(() {
+                    gameState = GameState.playerOneTurn;
+                    showRestartModal = false;
+                  });
+                  if (widget.gameMode == GameMode.playerVsComputer &&
+                      widget.playerOneToken == BoardToken.o) {
+                    makeComputerMove();
+                  }
+                },
               ),
-              confirmText: "NEXT ROUND",
-              cancelText: "QUIT",
-            )
-        ]),
+            if (showTerminalStateModal)
+              CustomModal(
+                dismiss: () {
+                  setState(() {
+                    showTerminalStateModal = false;
+                  });
+                },
+                onConfirm: () {
+                  setState(() {
+                    board.clearBoard();
+                    gameState = GameState.playerOneTurn;
+                    showTerminalStateModal = false;
+                  });
+                  if (widget.gameMode == GameMode.playerVsComputer &&
+                      widget.playerOneToken == BoardToken.o) {
+                    makeComputerMove();
+                  }
+                },
+                onCancel: () {
+                  Navigator.of(context).pop();
+                },
+                promptWidget: TerminalStatePrompt(
+                  gameMode: widget.gameMode,
+                  playerOneToken: widget.playerOneToken,
+                  gameState: gameState,
+                ),
+                confirmText: "NEXT ROUND",
+                cancelText: "QUIT",
+              )
+          ],
+        ),
       ),
     );
   }
