@@ -20,7 +20,7 @@ class MainApp extends StatelessWidget {
           shadow: Color(0xFF102028),
           surface: Color(0xFF192A32),
           surfaceContainer: Color(0xFF1E3640),
-          onPrimary: Color(0xFF0D4E50),
+          onPrimary: Color.fromARGB(255, 8, 48, 49),
           onSecondary: Color(0xFF573B00),
           onTertiary: Color(0xFF263B44),
           onError: Colors.black,
