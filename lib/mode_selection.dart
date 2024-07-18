@@ -75,15 +75,20 @@ class NewGameButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Column(
       children: [
-        OutlinedButton(
+        FilledButton(
           onPressed: () {
             startNewGame(context, GameMode.playerVsComputer);
           },
           child: const Text("NEW GAME (VS CPU)"),
         ),
-        OutlinedButton(
+        FilledButton(
+          style: FilledButton.styleFrom(
+            backgroundColor: theme.colorScheme.secondary,
+          ),
           onPressed: () {
             startNewGame(context, GameMode.playerVsPlayer);
           },

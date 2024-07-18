@@ -99,12 +99,15 @@ class _CustomModalContent extends StatelessWidget {
                   const SizedBox(height: 16),
                   Row(
                     children: [
-                      OutlinedButton(
+                      FilledButton(
+                        style: FilledButton.styleFrom(
+                          backgroundColor: theme.colorScheme.secondary,
+                        ),
                         onPressed: onCancel,
                         child: Text(cancelText),
                       ),
                       const SizedBox(width: 16),
-                      OutlinedButton(
+                      FilledButton(
                         onPressed: onConfirm,
                         child: Text(confirmText),
                       )
