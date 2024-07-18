@@ -31,6 +31,10 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
   final board = TicTacToeBoard();
   var gameState = GameState.playerOneTurn;
 
+  var xWins = 0;
+  var oWins = 0;
+  var draws = 0;
+
   var computerIsMoving = false;
 
   var showRestartModal = false;
@@ -41,12 +45,15 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
       if (board.checkForWin() == true) {
         if (gameState == GameState.playerOneTurn) {
           gameState = GameState.playerOneVictory;
+          xWins += 1;
         } else {
           gameState = GameState.playerTwoVictory;
+          oWins += 1;
         }
         showTerminalStateModal = true;
       } else if (board.checkForDraw() == true) {
         gameState = GameState.draw;
+        draws += 1;
         showTerminalStateModal = true;
       } else if (gameState == GameState.playerOneTurn) {
         gameState = GameState.playerTwoTurn;
@@ -192,6 +199,7 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
       body: SafeArea(
         child: Stack(
@@ -211,12 +219,101 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
                   makeMove: makeMove,
                   computerIsMoving: computerIsMoving,
                 ),
+                StatsRow(xWins: xWins, draws: draws, theme: theme, oWins: oWins)
               ],
             ),
             if (showRestartModal) _restartModal(),
             if (showTerminalStateModal) _terminalStateModal(),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class StatsRow extends StatelessWidget {
+  const StatsRow({
+    super.key,
+    required this.xWins,
+    required this.draws,
+    required this.theme,
+    required this.oWins,
+  });
+
+  final int xWins;
+  final int draws;
+  final ThemeData theme;
+  final int oWins;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        StatBlock(
+          statName: "X WINS",
+          statValue: xWins,
+        ),
+        const SizedBox(width: 16),
+        StatBlock(
+          statName: "DRAwS",
+          statValue: draws,
+          backgroundColour: theme.colorScheme.surfaceContainer,
+          textColour: theme.colorScheme.onSurface,
+        ),
+        const SizedBox(width: 16),
+        StatBlock(
+          statName: "O WINS",
+          statValue: oWins,
+          backgroundColour: theme.colorScheme.secondary,
+          textColour: theme.colorScheme.onSecondary,
+        ),
+      ],
+    );
+  }
+}
+
+class StatBlock extends StatelessWidget {
+  final Color? backgroundColour;
+  final Color? textColour;
+
+  const StatBlock(
+      {super.key,
+      required this.statName,
+      required this.statValue,
+      this.backgroundColour,
+      this.textColour});
+  final String statName;
+  final int statValue;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
+      decoration: BoxDecoration(
+          color: backgroundColour ?? theme.colorScheme.primary,
+          borderRadius: BorderRadius.circular(16),
+          border: const BorderDirectional(bottom: BorderSide(width: 4))),
+      child: Column(
+        children: [
+          Text(
+            statName,
+            style: theme.textTheme.bodyMedium!.copyWith(
+              color: textColour ?? theme.colorScheme.onPrimary,
+            ),
+          ),
+          const SizedBox(
+            height: 4,
+          ),
+          Text(
+            statValue.toString(),
+            style: theme.textTheme.titleLarge!.copyWith(
+              color: textColour ?? theme.colorScheme.onPrimary,
+            ),
+          ),
+        ],
       ),
     );
   }
