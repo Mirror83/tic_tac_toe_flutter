@@ -85,7 +85,7 @@ class NewGameButtons extends StatelessWidget {
           },
           child: const Text("NEW GAME (VS CPU)"),
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 8),
         FilledButton(
           style: FilledButton.styleFrom(
             backgroundColor: theme.colorScheme.secondary,
