@@ -46,6 +46,8 @@ class _BoardTileState extends State<BoardTile> {
             }
           },
           child: Container(
+            height: 100,
+            width: 100,
             decoration: BoxDecoration(
               color: theme.colorScheme.surfaceContainer,
               border: BorderDirectional(
