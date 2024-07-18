@@ -204,23 +204,37 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
       body: SafeArea(
         child: Stack(
           children: [
-            Column(
-              children: [
-                Header(
-                  gameState: gameState,
-                  refreshBoardCallBack: () {
-                    setState(() {
-                      showRestartModal = true;
-                    });
-                  },
+            Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 600),
+                child: OverflowBox(
+                  child: Center(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Header(
+                          gameState: gameState,
+                          refreshBoardCallBack: () {
+                            setState(() {
+                              showRestartModal = true;
+                            });
+                          },
+                        ),
+                        Board(
+                          board: board,
+                          makeMove: makeMove,
+                          computerIsMoving: computerIsMoving,
+                        ),
+                        StatsRow(
+                            xWins: xWins,
+                            draws: draws,
+                            theme: theme,
+                            oWins: oWins)
+                      ],
+                    ),
+                  ),
                 ),
-                Board(
-                  board: board,
-                  makeMove: makeMove,
-                  computerIsMoving: computerIsMoving,
-                ),
-                StatsRow(xWins: xWins, draws: draws, theme: theme, oWins: oWins)
-              ],
+              ),
             ),
             if (showRestartModal) _restartModal(),
             if (showTerminalStateModal) _terminalStateModal(),
@@ -247,28 +261,37 @@ class StatsRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        StatBlock(
-          statName: "X WINS",
-          statValue: xWins,
-        ),
-        const SizedBox(width: 16),
-        StatBlock(
-          statName: "DRAwS",
-          statValue: draws,
-          backgroundColour: theme.colorScheme.surfaceContainer,
-          textColour: theme.colorScheme.onSurface,
-        ),
-        const SizedBox(width: 16),
-        StatBlock(
-          statName: "O WINS",
-          statValue: oWins,
-          backgroundColour: theme.colorScheme.secondary,
-          textColour: theme.colorScheme.onSecondary,
-        ),
-      ],
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            child: StatBlock(
+              statName: "X WINS",
+              statValue: xWins,
+            ),
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: StatBlock(
+              statName: "DRAwS",
+              statValue: draws,
+              backgroundColour: theme.colorScheme.surfaceContainer,
+              textColour: theme.colorScheme.onSurface,
+            ),
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: StatBlock(
+              statName: "O WINS",
+              statValue: oWins,
+              backgroundColour: theme.colorScheme.secondary,
+              textColour: theme.colorScheme.onSecondary,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -291,7 +314,7 @@ class StatBlock extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
+      padding: const EdgeInsets.symmetric(vertical: 4),
       decoration: BoxDecoration(
           color: backgroundColour ?? theme.colorScheme.primary,
           borderRadius: BorderRadius.circular(16),
@@ -303,9 +326,6 @@ class StatBlock extends StatelessWidget {
             style: theme.textTheme.bodyMedium!.copyWith(
               color: textColour ?? theme.colorScheme.onPrimary,
             ),
-          ),
-          const SizedBox(
-            height: 4,
           ),
           Text(
             statValue.toString(),
