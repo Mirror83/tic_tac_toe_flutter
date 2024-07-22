@@ -20,7 +20,13 @@ class BoardTile extends StatefulWidget {
   State<BoardTile> createState() => _BoardTileState();
 }
 
-class _BoardTileState extends State<BoardTile> {
+class _BoardTileState extends State<BoardTile>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> animation;
+
+  double borderWidth = 8;
+
   String tokenToString() {
     switch (widget.token) {
       case BoardToken.x:
@@ -33,14 +39,40 @@ class _BoardTileState extends State<BoardTile> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 200));
+    animation = CurvedAnimation(parent: _controller, curve: Curves.easeIn);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return MouseRegion(
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
+          onTapUp: (details) {
+            setState(() {
+              borderWidth = 8;
+            });
+          },
+          onTapDown: ((details) {
+            setState(() {
+              borderWidth = 6;
+            });
+          }),
           onTap: () {
             if (widget.canPlaceToken) {
               widget.placeToken(widget.position);
+              _controller.reset();
+              _controller.forward();
             } else {
               log("Cannot place token yet.", name: "placeTokenBoardTile");
             }
@@ -51,16 +83,21 @@ class _BoardTileState extends State<BoardTile> {
             decoration: BoxDecoration(
               color: theme.colorScheme.surfaceContainer,
               border: BorderDirectional(
-                  bottom:
-                      BorderSide(width: 8, color: theme.colorScheme.shadow)),
+                  bottom: BorderSide(
+                width: borderWidth,
+                color: theme.colorScheme.shadow,
+              )),
               borderRadius: BorderRadius.circular(16),
             ),
             child: Center(
-              child: Text(
-                tokenToString(),
-                style: theme.textTheme.displaySmall!.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: determineTokenColour(theme),
+              child: FadeTransition(
+                opacity: animation,
+                child: Text(
+                  tokenToString(),
+                  style: theme.textTheme.displaySmall!.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: determineTokenColour(theme),
+                  ),
                 ),
               ),
             ),
