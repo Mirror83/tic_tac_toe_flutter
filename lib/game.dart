@@ -207,8 +207,8 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
             Center(
               child: ConstrainedBox(
                 constraints: const BoxConstraints(maxWidth: 600),
-                child: OverflowBox(
-                  child: Center(
+                child: Center(
+                  child: SingleChildScrollView(
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -220,16 +220,20 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
                             });
                           },
                         ),
-                        Board(
-                          board: board,
-                          makeMove: makeMove,
-                          computerIsMoving: computerIsMoving,
-                        ),
-                        StatsRow(
-                            xWins: xWins,
-                            draws: draws,
-                            theme: theme,
-                            oWins: oWins)
+                        Column(
+                          children: [
+                            Board(
+                              board: board,
+                              makeMove: makeMove,
+                              computerIsMoving: computerIsMoving,
+                            ),
+                            StatsRow(
+                                xWins: xWins,
+                                draws: draws,
+                                theme: theme,
+                                oWins: oWins)
+                          ],
+                        )
                       ],
                     ),
                   ),
