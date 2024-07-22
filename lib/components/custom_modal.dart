@@ -2,37 +2,84 @@ import 'package:flutter/material.dart';
 import 'package:tic_tac_toe/board.dart';
 import 'package:tic_tac_toe/game.dart';
 
-class CustomModal extends StatelessWidget {
+class CustomModal extends StatefulWidget {
   final void Function() dismiss;
   final void Function() onConfirm;
   final void Function() onCancel;
+  final bool isVisible;
 
   final Widget promptWidget;
   final String confirmText;
   final String cancelText;
 
-  const CustomModal(
-      {super.key,
-      required this.dismiss,
-      required this.onConfirm,
-      required this.onCancel,
-      required this.promptWidget,
-      required this.confirmText,
-      required this.cancelText});
+  const CustomModal({
+    super.key,
+    required this.isVisible,
+    required this.dismiss,
+    required this.onConfirm,
+    required this.onCancel,
+    required this.promptWidget,
+    required this.confirmText,
+    required this.cancelText,
+  });
+
+  @override
+  State<CustomModal> createState() => _CustomModalState();
+}
+
+class _CustomModalState extends State<CustomModal>
+    with SingleTickerProviderStateMixin {
+  late AnimationController controller;
+  late Animation<double> alphaAnimation;
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    controller = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 300))
+      ..addStatusListener((status) {
+        setState(() {});
+      });
+    alphaAnimation = CurvedAnimation(parent: controller, curve: Curves.easeIn);
+  }
+
+  @override
+  void didUpdateWidget(covariant CustomModal oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (!oldWidget.isVisible && widget.isVisible) {
+      controller.forward();
+    } else if (oldWidget.isVisible && !widget.isVisible) {
+      controller.reverse();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        _CustomModalOverlay(dismiss: dismiss),
-        _CustomModalContent(
-          onCancel: onCancel,
-          onConfirm: onConfirm,
-          promptWidget: promptWidget,
-          confirmText: confirmText,
-          cancelText: cancelText,
+    return Visibility(
+      visible: widget.isVisible
+          ? true
+          : controller.status != AnimationStatus.dismissed,
+      child: FadeTransition(
+        opacity: alphaAnimation,
+        child: Stack(
+          children: [
+            _CustomModalOverlay(dismiss: widget.dismiss),
+            _CustomModalContent(
+              onCancel: widget.onCancel,
+              onConfirm: widget.onConfirm,
+              promptWidget: widget.promptWidget,
+              confirmText: widget.confirmText,
+              cancelText: widget.cancelText,
+            ),
+          ],
         ),
-      ],
+      ),
     );
   }
 }
@@ -159,7 +206,7 @@ class TerminalStatePrompt extends StatelessWidget {
           case GameState.draw:
             return drawMsg;
           default:
-            throw unexpectedGameStateErrMsg;
+            return "";
         }
       case GameMode.playerVsPlayer:
         switch (gameState) {
@@ -174,7 +221,7 @@ class TerminalStatePrompt extends StatelessWidget {
           case GameState.draw:
             return drawMsg;
           default:
-            throw unexpectedGameStateErrMsg;
+            return "";
         }
     }
   }
@@ -188,11 +235,11 @@ class TerminalStatePrompt extends StatelessWidget {
       case GameState.draw:
         return "";
       default:
-        throw unexpectedGameStateErrMsg;
+        return "";
     }
   }
 
-  Color _winnerTextColour(ThemeData theme) {
+  Color? _winnerTextColour(ThemeData theme) {
     switch (gameState) {
       case GameState.playerOneVictory:
         return theme.colorScheme.primary;
@@ -201,7 +248,7 @@ class TerminalStatePrompt extends StatelessWidget {
       case GameState.draw:
         return theme.colorScheme.onSurface;
       default:
-        throw unexpectedGameStateErrMsg;
+        return null;
     }
   }
 
@@ -225,7 +272,9 @@ class TerminalStatePrompt extends StatelessWidget {
             Text(
               gameState == GameState.draw
                   ? "NO ONE TAKES THE ROUND"
-                  : "TAKES THE ROUND",
+                  : _determineWinningTokenText() != ""
+                      ? "TAKES THE ROUND"
+                      : "",
               style: theme.textTheme.headlineSmall!.copyWith(
                 color: _winnerTextColour(theme),
                 fontWeight: FontWeight.bold,
