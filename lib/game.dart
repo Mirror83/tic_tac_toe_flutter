@@ -157,8 +157,9 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
     );
   }
 
-  Widget _restartModal() {
+  Widget _restartModal({required bool isVisible}) {
     return CustomModal(
+      isVisible: isVisible,
       promptWidget: Text(
         "RESTART GAME?",
         style: Theme.of(context)
@@ -192,8 +193,9 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
     );
   }
 
-  Widget _terminalStateModal() {
+  Widget _terminalStateModal({required bool isVisible}) {
     return CustomModal(
+      isVisible: isVisible,
       dismiss: () {},
       onConfirm: () {
         setState(() {
@@ -239,8 +241,8 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
                 child: _body(theme),
               ),
             ),
-            if (showRestartModal) _restartModal(),
-            if (showTerminalStateModal) _terminalStateModal(),
+            _restartModal(isVisible: showRestartModal),
+            _terminalStateModal(isVisible: showTerminalStateModal),
           ],
         ),
       ),
