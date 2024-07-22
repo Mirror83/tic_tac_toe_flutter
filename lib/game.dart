@@ -129,6 +129,34 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
     }
   }
 
+  Widget _body(ThemeData theme) {
+    return SingleChildScrollView(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Header(
+            gameState: gameState,
+            refreshBoardCallBack: () {
+              setState(() {
+                showRestartModal = true;
+              });
+            },
+          ),
+          Column(
+            children: [
+              Board(
+                board: board,
+                makeMove: makeMove,
+                computerIsMoving: computerIsMoving,
+              ),
+              StatsRow(xWins: xWins, draws: draws, theme: theme, oWins: oWins)
+            ],
+          )
+        ],
+      ),
+    );
+  }
+
   Widget _restartModal() {
     return CustomModal(
       promptWidget: Text(
@@ -208,37 +236,7 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
             Center(
               child: ConstrainedBox(
                 constraints: const BoxConstraints(maxWidth: 600),
-                child: Center(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Header(
-                          gameState: gameState,
-                          refreshBoardCallBack: () {
-                            setState(() {
-                              showRestartModal = true;
-                            });
-                          },
-                        ),
-                        Column(
-                          children: [
-                            Board(
-                              board: board,
-                              makeMove: makeMove,
-                              computerIsMoving: computerIsMoving,
-                            ),
-                            StatsRow(
-                                xWins: xWins,
-                                draws: draws,
-                                theme: theme,
-                                oWins: oWins)
-                          ],
-                        )
-                      ],
-                    ),
-                  ),
-                ),
+                child: _body(theme),
               ),
             ),
             if (showRestartModal) _restartModal(),
