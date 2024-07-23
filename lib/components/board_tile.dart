@@ -47,6 +47,15 @@ class _BoardTileState extends State<BoardTile>
   }
 
   @override
+  void didUpdateWidget(covariant BoardTile oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.token != widget.token) {
+      _controller.reset();
+      _controller.forward();
+    }
+  }
+
+  @override
   void dispose() {
     _controller.dispose();
     super.dispose();
@@ -71,8 +80,6 @@ class _BoardTileState extends State<BoardTile>
           onTap: () {
             if (widget.canPlaceToken) {
               widget.placeToken(widget.position);
-              _controller.reset();
-              _controller.forward();
             } else {
               log("Cannot place token yet.", name: "placeTokenBoardTile");
             }
