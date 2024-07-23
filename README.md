@@ -16,7 +16,7 @@ This is a Tic-Tac-Toe game made Flutter.
 
 <!--Restart, Win, Lose, Draw -->
 
-![Win modal](./screenshots/win-modal.png)
+![Vs Player win modal](./screenshots/vs-player-win-modal.png)
 
 ## Process
 
