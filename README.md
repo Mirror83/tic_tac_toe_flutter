@@ -4,6 +4,8 @@ This is a Tic-Tac-Toe game made Flutter.
 
 ## Screenshots
 
+The screenshots are taken while running the application on Linux.
+
 ### Mode Selection
 
 ![Mode selection screen](./screenshots/mode-selection-screen.png)
@@ -21,7 +23,9 @@ This is a Tic-Tac-Toe game made Flutter.
 
 ## Process
 
-<!-- Design credit -->
+### UI Design
+
+The design of the application was an attempt to replicate that of the [Tic-Tac-Toe Frontend Mentor Callenge](https://www.frontendmentor.io/challenges/tic-tac-toe-game-Re7ZF_E2v). I decided to implement the design just by the screenshots on the challenge page.
 
 ### Board representation
 
@@ -31,8 +35,11 @@ The CPU is done using the minimax algorithm. Since Tic-Tac-Toe is a simple game 
 
 ### State management
 
-State management is done using Flutter Stateful widgets only. Since my goal with this project was to understand how Flutter works conceptually, I leaned in more towards solution provided by the Flutter framework itself. The state being managed is not only for the game logic, but also for the simple animations I have in this project.
-
-It is not very likely, but I may refactor this project using third party state management libraries, like [GetX]() or [flutter_redux]().
+State management is done using Flutter Stateful widgets only. Since my goal with this project was to understand how Flutter works conceptually, I leaned more towards a solution provided by the Flutter framework itself. The state being managed is not only for the game logic, but also for the simple animations I have in this project.
 
 ## Useful Resources
+
+- [Understanding constraints](https://docs.flutter.dev/ui/layout/constraints) - A very insightful article that helped me understand Flutter layout better
+- [How to implement the animated visibility widget](https://canopas.com/how-to-implement-the-animatedvisibility-widget-in-flutter-701b92643bf2) - This article (aside from giving me [Jetpack Compose]() nostalgia) provided ways to manage animation state and encouraged me to explore Flutter's widget lifecycle methods.
+- [Flutter Documentation](https://docs.flutter.dev/)
+- [Artificial Intelligence: A Modern Approach, 4th US ed.](https://aima.cs.berkeley.edu/) - The chapter on Adversarial Search and Games was a good refresher of the minimax algorithm. (I did not use alpha-beta pruning though)
