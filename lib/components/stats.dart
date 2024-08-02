@@ -20,9 +20,9 @@ class StatBlock extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 4),
       decoration: BoxDecoration(
-          color: backgroundColour ?? theme.colorScheme.primary,
-          borderRadius: BorderRadius.circular(16),
-          border: const BorderDirectional(bottom: BorderSide(width: 4))),
+        color: backgroundColour ?? theme.colorScheme.primary,
+        borderRadius: BorderRadius.circular(16),
+      ),
       child: Column(
         children: [
           Text(
