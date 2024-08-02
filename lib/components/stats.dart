@@ -73,7 +73,7 @@ class StatsRow extends StatelessWidget {
           const SizedBox(width: 8),
           Expanded(
             child: StatBlock(
-              statName: "DRAwS",
+              statName: "DRAWS",
               statValue: draws,
               backgroundColour: theme.colorScheme.surfaceContainer,
               textColour: theme.colorScheme.onSurface,
