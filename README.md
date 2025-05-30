@@ -31,7 +31,7 @@ The design of the application was an attempt to replicate that of the [Tic-Tac-T
 
 The board is represented as a 2D List of BoardTokens (see [lib/board.dart](./lib/board.dart)). The methods modify the board in-place.
 
-The CPU is done using the minimax algorithm. Since Tic-Tac-Toe is a simple game with around 9! (362,880) possible states, which is relatively few for a computer to go through, the CPU is impossible to beat. YOu can either draw with it or lose.
+The CPU is done using the minimax algorithm. Since Tic-Tac-Toe is a simple game with around 9! (362,880) possible states, which is relatively few for a computer to go through, the CPU is impossible to beat. You can either draw with it or lose.
 
 ### State management
 
